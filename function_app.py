@@ -1,40 +1,27 @@
-import logging
-import json
-
 import azure.functions as func
+import logging
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
+app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
+
+@app.route(route="http_trigger1")
+def http_trigger1(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    try:
-        req_body = req.get_json()
-        operation = req_body.get('operation')
-        x = req_body.get('x')
-        y = req_body.get('y')
-    except ValueError:
-        return func.HttpResponse(
-             "Invalid input",
-             status_code=400
-        )
+    operation = req.params.get('operation')
+    x_str = req.params.get('x')
+    y_str = req.params.get('y')
 
-    if not operation or x is None or y is None:
-        return func.HttpResponse(
-             "Please pass an operation and two numbers (x and y) in the request body",
-             status_code=400
-        )
+    try:
+        x = float(x_str)
+        y = float(y_str)
+    except:
+        return func.HttpResponse(f"Invalid values. Please adjust number formats.",status_code=400)
 
     if operation == 'add':
         result = x + y
     elif operation == 'subtract':
         result = x - y
     else:
-        return func.HttpResponse(
-             "Invalid operation. Please use 'add' or 'subtract'.",
-             status_code=400
-        )
+        return func.HttpResponse("Invalid operation. Please use 'add' or 'subtract'.",status_code=400)
 
-    return func.HttpResponse(
-        json.dumps({"result": result}),
-        mimetype="application/json",
-        status_code=200
-    )
+    return func.HttpResponse( f"Resultado: {result}", status_code=200)
