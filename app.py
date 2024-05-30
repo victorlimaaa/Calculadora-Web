@@ -17,6 +17,10 @@ def calculate():
             result = x + y
         elif operation == 'subtract':
             result = x - y
+        elif operation == 'multiply':
+            result = x * y
+        elif operation == 'divide' and y != 0:
+            result = x / y
         else:
             result = 'Invalid operation'
 
