@@ -21,6 +21,8 @@ def calculate():
             result = x * y
         elif operation == 'divide' and y != 0:
             result = x / y
+        elif operation == 'exponential':
+            reslt = x ** y
         else:
             result = 'Invalid operation'
 
